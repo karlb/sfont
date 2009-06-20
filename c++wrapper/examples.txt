@@ -1,0 +1,49 @@
+
+C++ SFont examples (written by Lion Vollnhals)
+
+
+introduction
+============
+
+You will need an external library to load the images with the font data -
+probably SDL_image.
+
+
+example 1 - loading
+===================
+
+// load the image using IMG_Load from the SDL_image library
+SDL_Surface img = IMG_Load("yourFontFilename");
+
+// construct the font with the image data
+SFont yourFont(img);
+
+
+example 2 - displaying text
+===========================
+
+// this example assumes that you have an initialised font named yourFont
+
+// display some raw text
+yourFont.write(screenSurface, "this is your text", x, y);
+
+// or use a std::string as text source
+std::string yourText("this is also your text");
+yourFont.write(screenSurface, yourText, x, y);
+
+
+example 3 - get metrics
+=======================
+
+// this example assumes that you have an initialised font named yourFont
+
+// get the width of a text
+int width = yourFont.getTextWidth("some text");
+
+// get the width of a std::string text
+std::string someText("some text");
+int width2 = yourFont.getTextWidth(someText);
+
+// get the height of the font
+int height = yourFont.getHeight();
+
