@@ -41,7 +41,7 @@ static Uint32 GetPixel(SDL_Surface *Surface, Sint32 X, Sint32 Y)
    Bpp = Surface->format->BytesPerPixel;
    bits = ((Uint8 *)Surface->pixels)+Y*Surface->pitch+X*Bpp;
 
-   // Get the pixel
+   /* Get the pixel */
    switch(Bpp) {
       case 1:
          return *((Uint8 *)Surface->pixels + Y * Surface->pitch + X);
@@ -49,7 +49,7 @@ static Uint32 GetPixel(SDL_Surface *Surface, Sint32 X, Sint32 Y)
       case 2:
          return *((Uint16 *)Surface->pixels + Y * Surface->pitch/2 + X);
          break;
-      case 3: { // Format/endian independent 
+      case 3: { /* Format/endian independent  */
          Uint8 r, g, b;
          r = *((bits)+Surface->format->Rshift/8);
          g = *((bits)+Surface->format->Gshift/8);
@@ -115,14 +115,14 @@ void SFont_Write(SDL_Surface *Surface, const SFont_Font *Font,
     if(text == NULL)
 	return;
 
-    // these values won't change in the loop
+    /* these values won't change in the loop */
     srcrect.y = 1;
     dstrect.y = y;
     srcrect.h = dstrect.h = Font->Surface->h - 1;
 
     for(c = text; *c != '\0' && x <= Surface->w ; c++) {
 	charoffset = ((int) (*c - 33)) * 2 + 1;
-	// skip spaces and nonprintable characters
+	/* skip spaces and nonprintable characters */
 	if (*c == ' ' || charoffset < 0 || charoffset > Font->MaxPos) {
 	    x += Font->CharPos[2]-Font->CharPos[1];
 	    continue;
@@ -152,7 +152,7 @@ int SFont_TextWidth(const SFont_Font *Font, const char *text)
 
     for(c = text; *c != '\0'; c++) {
 	charoffset = ((int) *c - 33) * 2 + 1;
-	// skip spaces and nonprintable characters
+	/* skip spaces and nonprintable characters */
         if (*c == ' ' || charoffset < 0 || charoffset > Font->MaxPos) {
             width += Font->CharPos[2]-Font->CharPos[1];
 	    continue;
