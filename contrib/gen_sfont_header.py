@@ -194,7 +194,6 @@ def bmp2header(bmp_filename, name=None, use_c99_types=False):
         else:
             return 0
         
-    #file_bytes_str = ['0x%02x%s' % (ord(x), '/* %d */'%y) for y, x in enumerate(file_bytes)]  # list comprehension python 2.4 feature
     file_bytes_str = ['0x%02x%s' % (ord(x), dumb_wrap_calc(y)*'\n') for y, x in enumerate(file_bytes)]  # list comprehension python 2.4 feature
 
     hdr_name = name
