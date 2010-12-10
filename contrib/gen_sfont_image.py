@@ -70,14 +70,19 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv
 
-    if len(argv) != 5:
-        sys.exit("Usage: python font.py /path/to/font.ttf font_size(e.g. 11) font_color(e.g. 000000) /path/to/save/dir/")
+    print len(argv)
+    if len(argv) < 5:
+        sys.exit("Usage: python font.py /path/to/font.ttf font_size(e.g. 11) font_color(e.g. 000000) /path/to/save/dir/ [unicode]")
 
     ttf_font_fullpathname = argv[1]
     fontsize = int(argv[2])
     fontcolor = argv[3]
     fontpng = argv[4]
-    ttf2image(ttf_font_fullpathname, fontsize, fontcolor, fontpng)
+    if len(argv) > 5:
+        use_unicode = True
+    else:
+        use_unicode = False
+    ttf2image(ttf_font_fullpathname, fontsize, fontcolor, fontpng, use_unicode)
 
 if __name__ == "__main__":
     sys.exit(main())
