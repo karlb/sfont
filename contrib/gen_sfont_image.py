@@ -23,6 +23,8 @@ def ttf2image(ttf_font_fullpathname, fontsize=None, fontcolor=None, fontpng=None
     
     # Convert colour/color hex string into tuple of RGB strings
     split = (fontcolor[0:2], fontcolor[2:4], fontcolor[4:6])
+    
+    font_color = (int(split[0], 16), int(split[1], 16), int(split[2], 16))
 
     # setting the font string
     text = u'!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
@@ -34,33 +36,45 @@ def ttf2image(ttf_font_fullpathname, fontsize=None, fontcolor=None, fontpng=None
     # setting the font and it's size
     font = ImageFont.truetype(ttf_font_fullpathname, fontsize)
 
-    # getting the font height value
-    text_height = font.getsize("{")[1] + 5
+    FONT_PIXEL_HEIGHT_OFFSET = 5  # original offset - I think this is too much .... I guess this needs to be a parameter :-)
+    FONT_PIXEL_HEIGHT_OFFSET = 1
 
-    # setting text_width to 0 before calculating image width
+    # setting width/height to 0 before calculating actual image width/height 
     text_width = 0
+    text_height = 0
+    seperator_width = 2  # +2 for "pink" kerning seperator/indicator
 
-    # start calculating width
+    # start calculating pixel width and height
     for i in range(0, number_of_codepoints):
-        text_width = text_width + font.getsize(text[i])[0]
+        glyph_width, glyph_height = font.getsize(text[i])
+        text_width = text_width + glyph_width + seperator_width
+        text_height = max(text_height, glyph_height)
+    text_height += FONT_PIXEL_HEIGHT_OFFSET
+    text_width = text_width + seperator_width  # final seperator
 
     # creating a new image
-    img = Image.new('RGBA', (text_width + 536, text_height), (0, 0, 0, 0))
+    img = Image.new('RGBA', (text_width, text_height), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
 
     # drawing the first 2 pixels of dividing line
-    draw.line(((0, 0), (1, 0)), fill=(255, 0, 255))
+    draw.line(((0, 0), (1, 0)), fill=PINK)
 
     # setting X position for the first symbol
     start = 2
 
+    glyph_y = max(0, FONT_PIXEL_HEIGHT_OFFSET - 1)
+    print glyph_y
     for i in range(0, number_of_codepoints):
-        draw.text((start, 4), text[i], font=font, fill=(int(split[0], 16), int(split[1], 16), int(split[2], 16)))
+        draw.text((start, glyph_y), text[i], font=font, fill=font_color)
         sz = draw.textsize(text[i], font=font)
         start = start + sz[0]
-        draw.line(((start, 0), (start + 1, 0)), fill=PINK)
-        start = start + 2
+        draw.line(((start, 0), (start + (seperator_width - 1), 0)), fill=PINK)
+        start = start + seperator_width
     del draw
+    
+    """TODO scan image and check the height, if there are blank lines above/below, consider removing them.
+    PIL seems to return larger pixel heights than actual, leading to large vertical spacing
+    """
     
     save_filename = os.path.join(fontpng, "font.png")
     img.save(save_filename, "PNG")
@@ -70,7 +84,6 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv
 
-    print len(argv)
     if len(argv) < 5:
         sys.exit("Usage: python font.py /path/to/font.ttf font_size(e.g. 11) font_color(e.g. 000000) /path/to/save/dir/ [unicode]")
 
