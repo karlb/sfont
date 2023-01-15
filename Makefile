@@ -24,7 +24,7 @@ clean:
 startmessage:
 	@echo ""
 	@echo "These examples require libSDL2_image. If you have any problems"
-	@echo "or questions, please let me know. <karlb@gmx.net>"
+	@echo "or questions, please let me know. <karl@karl.berlin>"
 	@echo ""
 
 endmessage:

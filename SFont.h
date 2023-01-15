@@ -26,7 +26,7 @@
 */                                                                            
 
 /************************************************************************ 
-*    SFONT - SDL Font Library by Karl Bartel <karlb@gmx.net>            *
+*    SFONT - SDL Font Library by Karl Bartel <karl@karl.berlin>         *
 *                                                                       *
 *  All functions are explained below. For further information, take a   *
 *  look at the example files, the links at the SFont web site, or       *

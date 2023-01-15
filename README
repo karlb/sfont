@@ -2,8 +2,12 @@
 -----------------------------------< SFont >------------------------------------
 
 License: GPL or LGPL (at your choice)
-Author: Karl Bartel <karlb@gmx.net>
-WWW: http://www.linux-games.com/sfont/
+Author: Karl Bartel <karl@karl.berlin>
+WWW: http://www.linux-games.com/sfont/ or https://github.com/karlb/sfont/
+
+This library has been originally developed for SDL1. The examples have been
+updated to work with SDL2, but are still using the SDL_Surface API. Changing it
+to use SDL_Textures should not be hard, but I have not tried it myself.
 
 Usage:
     1. Load a font and place it in an SDL_Surface *. If your are using the 
@@ -60,6 +64,9 @@ How to create Fonts:
 
 
 ChangeLog:
+
+2.10 (2023-01)
+    Update to use SDL2
 
 2.03
     Changes in C++ Wrapper by Lion Vollnhals:
