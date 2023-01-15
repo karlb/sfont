@@ -1,7 +1,7 @@
 
-CFLAGS = $(shell sdl-config --cflags) -Wall -pedantic -ggdb
+CFLAGS = $(shell sdl2-config --cflags) -Wall -pedantic -ggdb
 CXXFLAGS = $(CFLAGS)
-LIBS = -lSDL_image $(shell sdl-config --libs)
+LIBS = -lSDL2_image $(shell sdl2-config --libs)
 OBJECTS = SFont.o
 
 all: startmessage test1 test2 test3 SFontViewer endmessage
@@ -23,7 +23,7 @@ clean:
 
 startmessage:
 	@echo ""
-	@echo "These examples require libSDL_image. If you have any problems"
+	@echo "These examples require libSDL2_image. If you have any problems"
 	@echo "or questions, please let me know. <karlb@gmx.net>"
 	@echo ""
 

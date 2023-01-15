@@ -7,27 +7,38 @@
 
 #include "SDL_image.h"
 
+SDL_Window *sdlWindow;
+SDL_Renderer *sdlRenderer;
+SDL_Texture *sdlTexture;
 SDL_Surface *screen;
 
 void init_SDL()
 {
-	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ) {
+	int width=640, height=480;
+
+	if (SDL_CreateWindowAndRenderer(width, height, SDL_WINDOW_FULLSCREEN_DESKTOP, &sdlWindow, &sdlRenderer)) {
 		fprintf(stderr,
 			"Couldn't initialize SDL: %s\n", SDL_GetError());
 		exit(1);
 	}
 	atexit(SDL_Quit);			/* Clean up on exit */
+	sdlTexture = SDL_CreateTexture(sdlRenderer,
+				       SDL_PIXELFORMAT_ARGB8888,
+				       SDL_TEXTUREACCESS_STATIC,
+				       width, height);
+	screen = SDL_CreateRGBSurface(0, width, height, 32,
+						0x00FF0000,
+						0x0000FF00,
+						0x000000FF,
+						0xFF000000);
+}
 
-	/* Initialize the display */
-	screen = SDL_SetVideoMode(640, 480, 0, 0);
-	if ( screen == NULL ) {
-		fprintf(stderr, "Couldn't set %dx%dx%d video mode: %s\n",
-					640, 480, 16, SDL_GetError());
-		exit(1);
-	}
-	
-	/* Set the window manager title bar */
-	SDL_WM_SetCaption("SFont Test", "SFont");
+void update_screen()
+{
+	SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
+	SDL_RenderClear(sdlRenderer);
+	SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+	SDL_RenderPresent(sdlRenderer);
 }
 
 int main(int argc, char *argv[])
@@ -58,8 +69,7 @@ int main(int argc, char *argv[])
 	// demonstrates the use of TextWidth
 	SFont_Write(screen, Neon, 640-SFont_TextWidth(Neon, "Bottom Right!"),
 							  480-SFont_TextHeight(Neon),"Bottom Right!");
-	// Update the screen
-	SDL_UpdateRect(screen, 0, 0, 0, 0);
+	update_screen();
 
 	// Wait a bit
 	SDL_Delay(4000);
