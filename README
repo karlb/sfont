@@ -6,7 +6,7 @@ Author: Karl Bartel <karl@karl.berlin>
 WWW: http://www.linux-games.com/sfont/ or https://github.com/karlb/sfont/
 
 This library has been originally developed for SDL1. The examples have been
-updated to work with SDL2, but are still using the SDL_Surface API. Changing it
+updated to work with SDL3, but are still using the SDL_Surface API. Changing it
 to use SDL_Textures should not be hard, but I have not tried it myself.
 
 Usage:
@@ -64,6 +64,9 @@ How to create Fonts:
 
 
 ChangeLog:
+
+3.0 (2026-11)
+    Update to use SDL3
 
 2.10 (2023-01)
     Update to use SDL2

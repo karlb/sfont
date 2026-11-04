@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "SDL.h"
+#include <SDL3/SDL.h>
 #include "SFont.h"
 
-#include "SDL_image.h"
+#include <SDL3_image/SDL_image.h>
 
 SDL_Window *sdlWindow;
 SDL_Renderer *sdlRenderer;
@@ -16,7 +16,8 @@ void init_SDL()
 {
 	int width=640, height=480;
 
-	if (SDL_CreateWindowAndRenderer(width, height, SDL_WINDOW_FULLSCREEN_DESKTOP, &sdlWindow, &sdlRenderer)) {
+	if (!SDL_Init(SDL_INIT_VIDEO) ||
+	    !SDL_CreateWindowAndRenderer("SFont", width, height, SDL_WINDOW_FULLSCREEN, &sdlWindow, &sdlRenderer)) {
 		fprintf(stderr,
 			"Couldn't initialize SDL: %s\n", SDL_GetError());
 		exit(1);
@@ -26,18 +27,14 @@ void init_SDL()
 				       SDL_PIXELFORMAT_ARGB8888,
 				       SDL_TEXTUREACCESS_STATIC,
 				       width, height);
-	screen = SDL_CreateRGBSurface(0, width, height, 32,
-						0x00FF0000,
-						0x0000FF00,
-						0x000000FF,
-						0xFF000000);
+	screen = SDL_CreateSurface(width, height, SDL_PIXELFORMAT_ARGB8888);
 }
 
 void update_screen()
 {
 	SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
 	SDL_RenderClear(sdlRenderer);
-	SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+	SDL_RenderTexture(sdlRenderer, sdlTexture, NULL, NULL);
 	SDL_RenderPresent(sdlRenderer);
 }
 

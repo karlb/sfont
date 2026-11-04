@@ -21,7 +21,7 @@
     Karl Bartel
     karl@karl.berlin
 */                                                                            
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 #include <assert.h>
 #include <stdlib.h>
@@ -31,11 +31,12 @@ static Uint32 GetPixel(SDL_Surface *Surface, Sint32 X, Sint32 Y)
 {
    Uint8  *bits;
    Uint32 Bpp;
+   const SDL_PixelFormatDetails *fmt = SDL_GetPixelFormatDetails(Surface->format);
 
    assert(X>=0);
    assert(X<Surface->w);
    
-   Bpp = Surface->format->BytesPerPixel;
+   Bpp = fmt->bytes_per_pixel;
    bits = ((Uint8 *)Surface->pixels)+Y*Surface->pitch+X*Bpp;
 
    /* Get the pixel */
@@ -48,10 +49,10 @@ static Uint32 GetPixel(SDL_Surface *Surface, Sint32 X, Sint32 Y)
          break;
       case 3: { /* Format/endian independent  */
          Uint8 r, g, b;
-         r = *((bits)+Surface->format->Rshift/8);
-         g = *((bits)+Surface->format->Gshift/8);
-         b = *((bits)+Surface->format->Bshift/8);
-         return SDL_MapRGB(Surface->format, r, g, b);
+         r = *((bits)+fmt->Rshift/8);
+         g = *((bits)+fmt->Gshift/8);
+         b = *((bits)+fmt->Bshift/8);
+         return SDL_MapSurfaceRGB(Surface, r, g, b);
          }
          break;
       case 4:
@@ -77,7 +78,7 @@ SFont_Font* SFont_InitFont(SDL_Surface* Surface)
 
     SDL_LockSurface(Surface);
 
-    pink = SDL_MapRGB(Surface->format, 255, 0, 255);
+    pink = SDL_MapSurfaceRGB(Surface, 255, 0, 255);
     while (x < Surface->w) {
 	if (GetPixel(Surface, x, 0) == pink) { 
     	    Font->CharPos[i++]=x;
@@ -91,14 +92,14 @@ SFont_Font* SFont_InitFont(SDL_Surface* Surface)
     
     pixel = GetPixel(Surface, 0, Surface->h-1);
     SDL_UnlockSurface(Surface);
-    SDL_SetColorKey(Surface, 0, pixel);
+    SDL_SetSurfaceColorKey(Surface, false, pixel);
 
     return Font;
 }
 
 void SFont_FreeFont(SFont_Font* FontInfo)
 {
-    SDL_FreeSurface(FontInfo->Surface);
+    SDL_DestroySurface(FontInfo->Surface);
     free(FontInfo);
 }
 
